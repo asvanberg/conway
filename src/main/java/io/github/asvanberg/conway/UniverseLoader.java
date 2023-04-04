@@ -1,5 +1,8 @@
 package io.github.asvanberg.conway;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,5 +22,9 @@ public class UniverseLoader {
             }
         }
         return new Universe(width, height, aliveCells);
+    }
+
+    public static Universe fromFile(Path path) throws IOException {
+        return fromString(Files.readString(path));
     }
 }

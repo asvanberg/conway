@@ -1,3 +1,4 @@
 target/
 .idea/
 .jqwik-database
+.mvn/wrapper/maven-wrapper.jar
