@@ -9,23 +9,13 @@ public sealed interface Cell {
     record Alive() implements Cell {
         @Override
         public Cell evolve(final long aliveNeighbours) {
-            if (aliveNeighbours == 2 || aliveNeighbours == 3) {
-                return this;
-            }
-            else {
-                return DEAD;
-            }
+            return aliveNeighbours == 2 || aliveNeighbours == 3 ? ALIVE : DEAD;
         }
     }
     record Dead() implements Cell {
         @Override
         public Cell evolve(final long aliveNeighbours) {
-            if (aliveNeighbours == 3) {
-                return ALIVE;
-            }
-            else {
-                return this;
-            }
+            return aliveNeighbours == 3 ? ALIVE : DEAD;
         }
     }
 }
