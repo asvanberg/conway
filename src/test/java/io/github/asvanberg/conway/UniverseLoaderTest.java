@@ -2,7 +2,6 @@ package io.github.asvanberg.conway;
 
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UniverseLoaderTest {
@@ -10,10 +9,8 @@ class UniverseLoaderTest {
     public void load_from_string() {
         Universe universe = UniverseLoader.fromString("....\n.##.\n.##.\n....\n");
 
-        assertThat(universe.width())
-                .isEqualTo(4);
-        assertThat(universe.height())
-                .isEqualTo(4);
+        assertEquals(4, universe.width());
+        assertEquals(4, universe.height());
 
         assertFalse(universe.cellLivesAt(new Position(0, 0)));
         assertFalse(universe.cellLivesAt(new Position(0, 1)));

@@ -5,8 +5,6 @@ import java.util.Objects;
 import java.util.Set;
 
 public class Universe {
-    private static final Position DUMMY = new Position(-1, -1);
-
     private final int width;
     private final int height;
 
@@ -22,9 +20,9 @@ public class Universe {
 
         for (int y = 0; y < cells.length; y++) {
             for (int x = 0; x < cells[y].length; x++) {
-                Position o = new Position(x, y);
-                boolean alive = aliveCells.contains(o);
-                cells[y][x] = Cell.at(o, alive);
+                Position position = new Position(x, y);
+                boolean alive = aliveCells.contains(position);
+                cells[y][x] = alive ? new Cell.Alive(position) : new Cell.Dead(position);
             }
         }
     }
@@ -39,10 +37,18 @@ public class Universe {
         Cell[][] evolved = new Cell[height][width];
         for (int y = 0; y < evolved.length; y++) {
             for (int x = 0; x < evolved[y].length; x++) {
-                evolved[y][x] = cells[y][x].evolve(neighbours(cells[y][x]));
+                evolved[y][x] = getEvolve(cells[y][x]);
             }
         }
         return new Universe(width, height, evolved);
+    }
+
+    private Cell getEvolve(final Cell cell) {
+        long aliveNeighbours = neighbours(cell)
+                .stream()
+                .filter(Cell.Alive.class::isInstance)
+                .count();
+        return cell.evolve(aliveNeighbours);
     }
 
     public int height() {
@@ -54,7 +60,7 @@ public class Universe {
     }
 
     public boolean cellLivesAt(Position position) {
-        return cells[position.y()][position.x()].alive();
+        return cells[position.y()][position.x()] instanceof Cell.Alive;
     }
 
     private Set<Cell> neighbours(Cell cell) {
@@ -74,7 +80,7 @@ public class Universe {
     private Cell cellAt(final Position position) {
         if (position.x() < 0 || position.x() >= width || position.y() < 0 || position.y() >= height()) {
             // a dead cell is as good as any
-            return Cell.at(position, false);
+            return new Cell.Dead(position);
         }
         return cells[position.y()][position.x()];
     }
