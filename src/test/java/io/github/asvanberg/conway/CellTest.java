@@ -8,11 +8,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CellTest {
-    private static final Position ANY_POSITION = new Position(0, 0);
-
     @Test
     public void alive_cell_lives_with_2_neighbours() {
-        Cell alive = new Cell.Alive(ANY_POSITION);
+        Cell alive = Cell.ALIVE;
 
         Cell cell = alive.evolve(2);
 
@@ -21,7 +19,7 @@ class CellTest {
 
     @Test
     public void alive_cell_lives_with_3_neighbours() {
-        Cell alive = new Cell.Alive(ANY_POSITION);
+        Cell alive = Cell.ALIVE;
 
         Cell cell = alive.evolve(3);
 
@@ -30,7 +28,7 @@ class CellTest {
 
     @Property
     public void alive_cell_dies_with_above_3_neighbours(@ForAll @IntRange(min = 4) int neighbours) {
-        Cell alive = new Cell.Alive(ANY_POSITION);
+        Cell alive = Cell.ALIVE;
 
         Cell cell = alive.evolve(neighbours);
 
@@ -39,7 +37,7 @@ class CellTest {
 
     @Property
     public void alive_cell_dies_with_below_2_neighbours(@ForAll @IntRange(max = 1) int neighbours) {
-        Cell alive = new Cell.Alive(ANY_POSITION);
+        Cell alive = Cell.DEAD;
 
         Cell cell = alive.evolve(neighbours);
 
@@ -48,7 +46,7 @@ class CellTest {
 
     @Test
     public void dead_cell_starts_living_with_3_neighbours() {
-        Cell dead = new Cell.Dead(ANY_POSITION);
+        Cell dead = Cell.DEAD;
 
         Cell cell = dead.evolve(3);
 
@@ -57,7 +55,7 @@ class CellTest {
 
     @Property
     public void dead_cell_stays_dead_with_more_than_3_neighbours(@ForAll @IntRange(min = 4) int neighbours) {
-        Cell dead = new Cell.Dead(ANY_POSITION);
+        Cell dead = Cell.DEAD;
 
         Cell cell = dead.evolve(neighbours);
 
@@ -66,7 +64,7 @@ class CellTest {
 
     @Property
     public void dead_cell_stays_dead_with_less_than_3_neighbours(@ForAll @IntRange(max = 2) int neighbours) {
-        Cell dead = new Cell.Dead(ANY_POSITION);
+        Cell dead = Cell.DEAD;
 
         Cell cell = dead.evolve(neighbours);
 

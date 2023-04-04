@@ -1,6 +1,8 @@
 package io.github.asvanberg.conway;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -22,7 +24,7 @@ public class Universe {
             for (int x = 0; x < cells[y].length; x++) {
                 Position position = new Position(x, y);
                 boolean alive = aliveCells.contains(position);
-                cells[y][x] = alive ? new Cell.Alive(position) : new Cell.Dead(position);
+                cells[y][x] = alive ? Cell.ALIVE : Cell.DEAD;
             }
         }
     }
@@ -37,14 +39,15 @@ public class Universe {
         Cell[][] evolved = new Cell[height][width];
         for (int y = 0; y < evolved.length; y++) {
             for (int x = 0; x < evolved[y].length; x++) {
-                evolved[y][x] = getEvolve(cells[y][x]);
+                Position position = new Position(x, y);
+                evolved[y][x] = evolve(cells[y][x], position);
             }
         }
         return new Universe(width, height, evolved);
     }
 
-    private Cell getEvolve(final Cell cell) {
-        long aliveNeighbours = neighbours(cell)
+    private Cell evolve(final Cell cell, final Position position) {
+        long aliveNeighbours = neighbours(position)
                 .stream()
                 .filter(Cell.Alive.class::isInstance)
                 .count();
@@ -63,24 +66,24 @@ public class Universe {
         return cells[position.y()][position.x()] instanceof Cell.Alive;
     }
 
-    private Set<Cell> neighbours(Cell cell) {
-        Position above = cell.position().above();
-        Position below = cell.position().below();
-        return Set.of(
+    private Collection<Cell> neighbours(Position position) {
+        Position above = position.above();
+        Position below = position.below();
+        return List.of(
                 cellAt(above),
                 cellAt(above.left()),
                 cellAt(above.right()),
                 cellAt(below),
                 cellAt(below.right()),
                 cellAt(below.left()),
-                cellAt(cell.position().left()),
-                cellAt(cell.position().right()));
+                cellAt(position.left()),
+                cellAt(position.right()));
     }
 
     private Cell cellAt(final Position position) {
         if (position.x() < 0 || position.x() >= width || position.y() < 0 || position.y() >= height()) {
             // a dead cell is as good as any
-            return new Cell.Dead(position);
+            return Cell.DEAD;
         }
         return cells[position.y()][position.x()];
     }

@@ -1,25 +1,27 @@
 package io.github.asvanberg.conway;
 
 public sealed interface Cell {
-    Cell evolve(long aliveNeighbours);
-    Position position();
+    Cell ALIVE = new Alive();
+    Cell DEAD = new Dead();
 
-    record Alive(Position position) implements Cell {
+    Cell evolve(long aliveNeighbours);
+
+    record Alive() implements Cell {
         @Override
         public Cell evolve(final long aliveNeighbours) {
             if (aliveNeighbours == 2 || aliveNeighbours == 3) {
                 return this;
             }
             else {
-                return new Dead(position);
+                return DEAD;
             }
         }
     }
-    record Dead(Position position) implements Cell {
+    record Dead() implements Cell {
         @Override
         public Cell evolve(final long aliveNeighbours) {
             if (aliveNeighbours == 3) {
-                return new Alive(position);
+                return ALIVE;
             }
             else {
                 return this;
